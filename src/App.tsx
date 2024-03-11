@@ -22,11 +22,12 @@ function App() {
 
   useEffect(() => {
     const routeLocationData = getRouteIdFromOutlet?.props.children.props.match.route;
-    const locationKey = routeLocationData.path;
-    const locationRolesObj = JSON.parse(routeLocationData.id);
-    const locationRoles = locationRolesObj[locationKey];
-
-    setIsValidRole(isRoleValid(user?.roles, locationRoles));
+    const locationKey = routeLocationData?.path;
+    const locationRolesObj = routeLocationData?.id && JSON.parse(routeLocationData?.id);
+    if (locationRolesObj && locationKey) {
+      const locationRoles = locationRolesObj[locationKey];
+      setIsValidRole(isRoleValid(user?.roles, locationRoles));
+    }
   }, [user]);
 
   if (!user) return <Login />;
