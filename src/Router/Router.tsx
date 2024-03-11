@@ -10,16 +10,7 @@ import ChangeLog from "../Pages/ChangeLog/ChangeLog";
 import Video from "../Pages/Video/Video";
 import Feedback from "../Pages/Feedback/Feedback";
 import Login from "../Pages/Login/Login";
-
-export const paths = {
-  dashboard: { path: "dashboard", roles: [] },
-  details: { path: "details", roles: ["admin", "manager"] },
-  api: { path: "api", roles: ["admin", "manager"] },
-  feedback: { path: "feedback", roles: [] },
-  howTo: { path: "howTo", roles: [] },
-  changeLog: { path: "changeLog", roles: ["admin"] },
-  video: { path: "video", roles: [] },
-};
+import { paths } from "../Utils/Constants";
 
 const createRouteId = (key: keyof typeof paths) => {
   return JSON.stringify({ [key]: paths[key].roles });

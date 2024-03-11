@@ -1,20 +1,19 @@
 import { Menu, MenuProps } from "antd";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { paths } from "../../../Utils/Constants";
 
-const items: MenuProps["items"] = [
-  {
-    label: "Navigation One",
-    key: "mail",
-  },
-  {
-    label: "Navigation Two",
-    key: "app",
-  },
-];
+const pages = Object.keys(paths);
+const items: MenuProps["items"] = pages.map((key) => {
+  const page = paths[key as keyof typeof paths];
+  return { label: page.label, key: page.path };
+});
 
 const NavbarDesktop = () => {
+  const naviage = useNavigate();
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
+    naviage(e.key);
   };
   return <Menu onClick={onClick} mode="horizontal" items={items} />;
 };
