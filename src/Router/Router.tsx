@@ -17,7 +17,7 @@ export const paths = {
   api: { path: "api", roles: ["admin", "manager"] },
   feedback: { path: "feedback", roles: [] },
   howTo: { path: "howTo", roles: [] },
-  changeLog: { path: "changeLog", roles: [] },
+  changeLog: { path: "changeLog", roles: ["admin"] },
   video: { path: "video", roles: [] },
 };
 

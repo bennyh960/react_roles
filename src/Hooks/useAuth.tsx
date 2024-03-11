@@ -9,7 +9,7 @@ const checkTokenValidity = (token: string) => {
 const decodeToken = (token: string) => {
   return {
     userName: "Admin01",
-    roles: ["admin", "manager"],
+    roles: ["manager"],
   };
 };
 
