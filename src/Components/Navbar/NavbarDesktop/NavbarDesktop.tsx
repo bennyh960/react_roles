@@ -13,7 +13,7 @@ const NavbarDesktop = () => {
   const naviage = useNavigate();
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
-    naviage(e.key);
+    naviage("/v1/" + e.key);
   };
   return <Menu onClick={onClick} mode="horizontal" items={items} />;
 };

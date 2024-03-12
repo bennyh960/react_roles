@@ -1,6 +1,6 @@
 import { Button, Result } from "antd";
 import { ResultStatusType } from "antd/es/result";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { isRouteErrorResponse, useNavigate, useRouteError } from "react-router-dom";
 
 const errorMaps: { [key: number]: string } = {
@@ -10,7 +10,11 @@ const errorMaps: { [key: number]: string } = {
   500: "Sorry, something went wrong.",
 };
 
-const ErrorPage = () => {
+interface IErrorProps {
+  errorProp?: { status: number; message: string };
+}
+
+const ErrorPage: FC<IErrorProps> = ({ errorProp }) => {
   const error = useRouteError();
   const navigate = useNavigate();
   const [errorState, setErrorState] = useState({
@@ -18,23 +22,30 @@ const ErrorPage = () => {
     status: 404,
   });
 
-  const handleErrorType = () => {
+  const handleErrorType = async () => {
     if (isRouteErrorResponse(error)) {
       setErrorState({ status: error.status, message: error.data?.message || error.statusText });
     } else if (error instanceof Error) {
       setErrorState({ status: 400, message: error.message });
+    } else if (error instanceof Response) {
+      setErrorState({ status: error.status, message: error.text && (await error.text()) });
     } else if (typeof error === "string") {
       setErrorState({ status: 400, message: error });
     } else {
+      console.log("from here", error);
       setErrorState({ status: 500, message: "Unknown error" });
     }
 
     // @ts-ignore
-    console.error(error.status);
+    // console.error(error.status);
   };
 
   useEffect(() => {
-    handleErrorType();
+    if (errorProp) {
+      setErrorState({ status: errorProp.status, message: errorProp.message });
+    } else {
+      handleErrorType();
+    }
   }, []);
 
   return (
