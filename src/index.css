@@ -1,1 +1,38 @@
+/* Layouts */
+.content_css_class{
+    padding: 0 28px;
+    flex: 1;
+    width: 80vw;
+    margin: auto;
+}
 
+
+/* Responsive Helpers */
+.flex-responsive {
+    display: flex;
+}
+
+
+.gap-20 {
+    gap: 20px;
+}
+
+.flex-center{
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+@media screen and (max-width:576px) {
+    .flex-responsive {
+        flex-direction: column;
+    }
+
+    .content_css_class{
+        padding: 0 5px;
+        width: 95vw;
+        margin: auto;
+    }
+ 
+}

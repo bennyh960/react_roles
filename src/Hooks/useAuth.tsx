@@ -6,20 +6,24 @@ const checkTokenValidity = (token: string) => {
   return true;
 };
 
-const decodeToken = (token: string) => {
+const decodeToken = (token: string): User | null => {
   return {
-    userName: "Admin01",
-    roles: ["user"],
+    userName: "Benny",
+    pspName: "Bank Leumi",
+    roles: ["admin"],
   };
 };
 
-type user = {
+type Roles = "admin" | "guest" | "manager";
+
+type User = {
   userName: string;
-  roles: string[];
+  pspName: string;
+  roles: Roles[];
 };
 
 const useAuth = () => {
-  const [user, setUser] = useState<user | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (token) {

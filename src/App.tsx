@@ -3,8 +3,6 @@ import { useEffect } from "react";
 import { Layout } from "antd";
 import { Outlet, useParams, Navigate, useOutlet, useLocation } from "react-router-dom";
 import NavbarDesktop from "./Components/Navbar/NavbarDesktop/NavbarDesktop";
-import useAuth from "./Hooks/useAuth";
-import Login from "./Pages/Login/Login";
 
 const { Content } = Layout;
 
@@ -16,9 +14,9 @@ const isRoleValid = (userRoles: string[] | undefined, outletRole: string[] | nul
 
 function App() {
   return (
-    <Layout>
+    <Layout style={{ height: "98vh", display: "flex", flexDirection: "column", overflow: "auto" }}>
       <NavbarDesktop />
-      <Content style={{ padding: "0 48px" }}>
+      <Content className="content_css_class">
         <Outlet />
       </Content>
     </Layout>
