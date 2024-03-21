@@ -1,10 +1,35 @@
+:root{
+    --layout_max_width:1200px
+}
+
 /* Layouts */
-.content_css_class{
+
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+
+
+
+#layout_header_css_class{
+    display: flex;
+    background-color: #ffffff;
+    align-items: center;
+    width: 100%;
+}
+
+#layout_content_css_class{
+    max-width: var(--layout_max_width);
     padding: 0 28px;
     flex: 1;
-    width: 80vw;
     margin: auto;
+    max-height: 100vh;
+    overflow: auto;
+    width:100%
 }
+
 
 
 /* Responsive Helpers */
@@ -29,10 +54,12 @@
         flex-direction: column;
     }
 
-    .content_css_class{
+    #layout_content_css_class{
         padding: 0 5px;
         width: 95vw;
         margin: auto;
     }
  
 }
+
+

@@ -1,0 +1,24 @@
+#navbar_desktop_wrapper{
+   display: flex;
+   align-items: center;
+   /* border: 1px solid red; */
+   width: 100%;
+   max-width: var(--layout_max_width);
+   margin: auto;
+   position: relative;
+}
+
+#logo_main{
+   position: absolute;
+   left: 15px;
+   bottom: 5px;
+}
+
+@media screen and (max-width:576px) {
+   #logo_main{
+      width: 40px;
+      height: 40px;
+      left: -40px;
+      bottom: 20px;
+   }
+}

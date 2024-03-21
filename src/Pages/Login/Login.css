@@ -1,0 +1,41 @@
+.login-screen {
+    background-image: url(https://uguc.outsystemsenterprise.com/RosalindSandbox/img/RosalindSandbox.SampleBackgroundImageBlur2.jpg?rUufYcpQJfkcEo0f3G88Hg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.login-form-wrapper {
+    height: 400px;
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(30px); 
+    border: 1px solid rgba(120,120,120, 0.2);
+    box-shadow: 0 0 30px rgba(120, 120, 120, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+
+}
+
+.login_title{
+    padding: 15px;
+    text-align: center;
+}
+.login_title_primary{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login_title_secondary{
+    color: white;
+}
+

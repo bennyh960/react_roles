@@ -1,5 +1,5 @@
 import { Column } from "@ant-design/plots";
-import { Card, Flex, Statistic, Typography } from "antd";
+import { Card, Flex, Statistic } from "antd";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 
 const dummyData = {
@@ -58,7 +58,7 @@ const DashboardChart = () => {
 
     return data.map((m, i) => {
       return (
-        <Card style={{ flex: 1, width: "100%" }}>
+        <Card key={m.label} style={{ flex: 1, width: "100%" }}>
           <Statistic
             title={m.label}
             value={m.value}
@@ -75,8 +75,7 @@ const DashboardChart = () => {
   return (
     <Flex vertical>
       <div className="flex-responsive gap-20 flex-center">{drawStatistic()}</div>
-      <Typography.Title level={3}>API History</Typography.Title>
-      <Column {...config} colorField="black" style={{ flex: 1 }} />
+      <Column {...config} colorField="black" containerStyle={{ flex: 1 }} title={"API HISTORY"} />
     </Flex>
   );
 };

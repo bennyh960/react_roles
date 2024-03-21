@@ -4,7 +4,7 @@ import useAuth from "../../Hooks/useAuth";
 import Login from "../../Pages/Login/Login";
 import ErrorPage from "../../Pages/ErrorPage/ErrorPage";
 
-const isRoleValid = (userRoles: string[] | undefined, outletRole: string[] | null) => {
+export const isRoleValid = (userRoles: string[] | undefined, outletRole: string[] | null) => {
   if (!userRoles) return false;
   if (!outletRole) return true;
   return userRoles.some((role) => outletRole.includes(role));
@@ -23,6 +23,7 @@ function ProtectedRoute() {
     if (locationRolesObj && locationKey) {
       setLocationRoles(locationRolesObj[locationKey]);
     }
+    // eslint-disable-next-line
   }, [user, location.pathname]);
 
   if (!isRoleValid(user?.roles, locationRoles))

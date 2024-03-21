@@ -10,7 +10,7 @@ const decodeToken = (token: string): User | null => {
   return {
     userName: "Benny",
     pspName: "Bank Leumi",
-    roles: ["admin"],
+    roles: ["manager"],
   };
 };
 

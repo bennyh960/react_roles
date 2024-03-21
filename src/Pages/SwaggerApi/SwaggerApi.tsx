@@ -1,24 +1,45 @@
-import React, { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 import useAuth from "../../Hooks/useAuth";
+import { notification } from "antd";
+import { paths } from "../../Utils/Constants";
+import { isRoleValid } from "../../Components/ProtectedRoute/ProtectedRoute";
 
-const SwaggerApi: FC<{}> = ({}) => {
+const SwaggerApi = () => {
   const { user } = useAuth();
-  const [supportedSubmitMethods, setSupportedSubmitMethods] = useState<undefined | string[]>([]);
+  const [isValidRole, setIsValidRole] = useState(false);
+  const [notify, contextHolder] = notification.useNotification();
+
+  const openNotification = () => {
+    notify.info({
+      key: "role",
+      message: "API Usage",
+      description: `Only ${paths.api.roles.join(
+        " and "
+      )} can make actual requests with the API. Others who have access to this API are only for documentation and learning purposes..`,
+      duration: 6,
+    });
+  };
 
   useEffect(() => {
-    setSupportedSubmitMethods(user?.roles.includes("admin") ? undefined : []);
-    console.log(user);
+    setIsValidRole(isRoleValid(user?.roles, paths.api.roles));
   }, [user]);
 
+  useEffect(() => {
+    !isValidRole && openNotification();
+  }, [isValidRole]);
+
   return (
-    <div>
-      <SwaggerUI
-        supportedSubmitMethods={user?.roles.includes("admin") ? undefined : []}
-        url={"https://localhost:7035/swagger/v1/swagger.json"}
-      />
-    </div>
+    <>
+      {contextHolder}
+      <div>
+        <SwaggerUI
+          // supportedSubmitMethods={isValidRole ? undefined : []}
+          url={"https://localhost:7035/swagger/v1/swagger.json"}
+        />
+      </div>
+    </>
   );
 };
 

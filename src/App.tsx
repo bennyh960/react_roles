@@ -1,22 +1,22 @@
 import { useEffect } from "react";
 // import logo from "./logo.svg";
 import { Layout } from "antd";
-import { Outlet, useParams, Navigate, useOutlet, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import NavbarDesktop from "./Components/Navbar/NavbarDesktop/NavbarDesktop";
 
-const { Content } = Layout;
-
-const isRoleValid = (userRoles: string[] | undefined, outletRole: string[] | null) => {
-  if (!userRoles) return false;
-  if (!outletRole) return true;
-  return userRoles.some((role) => outletRole.includes(role));
-};
+const { Content, Header } = Layout;
 
 function App() {
+  const naviage = useNavigate();
+  useEffect(() => {
+    naviage("/v1/dashboard");
+  }, [naviage]);
   return (
-    <Layout style={{ height: "98vh", display: "flex", flexDirection: "column", overflow: "auto" }}>
-      <NavbarDesktop />
-      <Content className="content_css_class">
+    <Layout style={{ height: "100vh", display: "flex", flexDirection: "column", gap: "5px" }}>
+      <Header id="layout_header_css_class">
+        <NavbarDesktop />
+      </Header>
+      <Content id="layout_content_css_class">
         <Outlet />
       </Content>
     </Layout>

@@ -1,7 +1,6 @@
-import React, { useMemo } from "react";
-import { useParams, useRoutes } from "react-router-dom";
+import { useMemo } from "react";
 import PageCard from "../../Components/PageCard/PageCard";
-import { Collapse, Descriptions, Typography } from "antd";
+import { Descriptions, Typography } from "antd";
 import CollapseUi from "../../Components/CollapseUI/CollapseUi";
 
 const { Paragraph } = Typography;
@@ -149,6 +148,7 @@ const ChangeLog = () => {
         };
       });
     },
+    // eslint-disable-next-line
     []
   );
 

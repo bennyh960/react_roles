@@ -1,5 +1,5 @@
-import { Flex, Space, Typography } from "antd";
-import React, { FC, ReactNode } from "react";
+import { Flex, Typography } from "antd";
+import { FC, ReactNode } from "react";
 
 interface IPageCardProps {
   title: string;

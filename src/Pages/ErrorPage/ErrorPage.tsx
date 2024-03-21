@@ -46,7 +46,8 @@ const ErrorPage: FC<IErrorProps> = ({ errorProp }) => {
     } else {
       handleErrorType();
     }
-  }, []);
+    // eslint-disable-next-line
+  }, [errorProp]);
 
   return (
     <Result

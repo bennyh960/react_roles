@@ -1,0 +1,1538 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "BOI API's",
+    "description": "An ASP.NET Core Web API for managing BOI endpoints",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Account/{AcctId}/availableBalances": {
+      "get": {
+        "tags": ["Account"],
+        "summary": "Get  total balance and useable balance of the account",
+        "description": "This end point returns the total balance and useable balance of the account.\r\n            \r\n<br><b>Request Attribute details:</b><br>1. AcctId: Unique identifier for the account<br /><br><b>Response Attribute details:</b><br>1.TtlBal: All Balance including any 'locked' amount<br>2.AvlblBal: Fund avaiable for use from the account (not locked)<br /><br /><b>Notes: </b><br>API will validate the existence of an account and return available balance information if present.<br /><br />\r\nRequest URL:<br />```https://domain.for.later/BOI/rest/v1/accounts/{AcctId}/availableBalances```",
+        "parameters": [
+          {
+            "name": "AcctId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountGetAvailableBalancesDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Account/{AcctId}/balances": {
+      "get": {
+        "tags": ["Account"],
+        "summary": "Get  total balance and useable balance of the account",
+        "description": "This end point returns the total balance of the account.\r\n            \r\n<br><b>Request Attribute details:</b><br>1. AcctId: Unique identifier for the account<br /><br><b>Response Attribute details:</b><br>1.TtlBal: All Balance including any 'locked' amount<br /><b>Notes: </b><br>API will validate the existence of an account and return available balance information if present.<br /><br />\r\nRequest URL:<br />```https://domain.for.later/BOI/rest/v1/accounts/{AcctId}/balances```",
+        "parameters": [
+          {
+            "name": "AcctId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountGetAvailableBalancesDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alias": {
+      "post": {
+        "tags": ["Account"],
+        "description": "This end point creates an ALIAS.\r\n            \r\n<b>Request Attribute details:</b><br>1.AcctId: The Account ID of the user for whom the Alias is being created<br>2.AliasTp: Type of Alias which only 'PHONE' (in rosalind is : 'NAME', 'PHONE', 'BANK-ACC' or 'PAN').<br>3.AliasHash: SHA256 Hash of the Alias<br><b>Response Attribute details:</b><br>1.Sts: Status of Alias creation<br>2.TxId: Transaction ID from the Ledger<br /><b>Notes: </b><br>\r\n- Aliases are created at the Ledger as UNIQUE hashed values across all PIP's. If this request fails, it is because that Alias already exists.\r\n<br /><b>My notes: </b><br> - PIP should provide alias hash , but for demonstration only i created hashing for simple string on the 'AccountAliasRequestDto' <br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/alias```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountAliasRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountAliasRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountAliasRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountAliasResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alias/{AliasHash}": {
+      "get": {
+        "tags": ["Account"],
+        "description": "This end point fetches the details of an ALIAS\r\n            \r\n<b>Request Attribute details:</b><br>1. AliasHash: The Alias hash that is provided by your user<br><b>Response Attribute details:</b><br>1.AliasTp: Type of Alias Eg: PHONE<br>2.DisposableAlias: Yes or No<br>3.AcctId: The Account ID associated with that Alias<br>4.PipId: The PIP ID associated with the Account ID<br /><b>Notes: </b><br>NA<br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/alias/{AliasHash}```",
+        "parameters": [
+          {
+            "name": "AliasHash",
+            "in": "path",
+            "description": "The Alias hash that is provided by your user",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountAliasResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Account"],
+        "summary": "This end point deletes an ALIAS.",
+        "description": "This end point deletes an ALIAS.\r\n            \r\n<br><b>Request Attribute details:</b><br>1. AliasHash: SHA256 Hash of the Alias <br /><br><b>Response Attribute details:</b><br>1. Sts: Status of Alias creation, if it has been successfully deleted. Will return 'Success' if deleted.<br>2. TxId: Transaction ID from the Ledger if its a success<br /><br /><b>Notes: </b><br /><br>1.This request will FAIL, if the hash/Alias doen't exists(400)<br /><br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/alias/{AliasHash}```",
+        "parameters": [
+          {
+            "name": "AliasHash",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountAliasResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{acctId}/close": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "",
+        "description": "This endpoint is used to close an account on the Ledger.\r\n\r\n<b>Request Attribute details:</b>\r\n1. acctId: Unique identifier of an account.\r\n\r\n<b>Response Attribute details:</b>\r\n1. AcctSts: Status of the account operation. Returns 'Closed' status in case of successful action.\r\n\r\nNotes:\r\n- API will validate the existence of an account and throw an error if not found.\r\n- It is not possible to close an account with a non-zero balance. Ensure that all locks and balances are moved before attempting to close an account.\r\n\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/close```",
+        "parameters": [
+          {
+            "name": "acctId",
+            "in": "path",
+            "description": "Unique identifier of the account to be closed.",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountActionResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/disable": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "",
+        "description": "This end point used to disable an account on the Ledger.\r\n            \r\n<br><b>Request Attribute details:</b><br>\r\n1.AcctId: Unique identifier of an account\r\n<br /><br><b>Response Attribute details:</b><br>\r\n1.AcctSts: Status of the account operation. Return 'Disabled' status in case of successful action.\r\n<br /><br />\r\nNotes: \r\n<br>\r\nAPI will validate the existence of an account and throw error if not found.\r\n<br>\r\nIt is not possible to transfer fund to or from a disabled account.\r\n<br /><br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/disable```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountActionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enable": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "",
+        "description": "This end point used to enable  an account on the Ledger.\r\n            \r\n<br><b>Request Attribute details:</b><br>\r\n1.AcctId: Unique identifier of an account\r\n<br /><br><b>Response Attribute details:</b><br>\r\n1.AcctId: Account Id\r\n<br>\r\n1.AcctSts: Status of the account operation. Return 'Open' status in case of successful action.\r\n<br /><br />\r\nNotes: \r\n<br>\r\nAPI will validate the existence of an account and throw error if not found.\r\n<br /><br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/enable```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountActionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/freeze": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "",
+        "description": "This end point used to freeze   an account on the Ledger.\r\n            \r\n<br><b>Request Attribute details:</b><br>\r\n1.AcctId: Unique identifier of an account\r\n<br /><br><b>Response Attribute details:</b><br>\r\n1.AcctId: Account Id\r\n<br>\r\n1.AcctSts: Status of the account operation. Return 'Frozen' status in case of successful action.\r\n<br /><br />\r\nNotes: \r\n<br>\r\nAPI will validate the existence of an account and throw error if not found.\r\n        /// <br>\r\nIt is not possible to transfer fund from a frozen account , but it is possible to deposit on a frozen account.\r\n<br /><br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/freeze```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountIdWrapper"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountActionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/open": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "Open New Parent Account.",
+        "description": "This end point is used to create a new Parent Account on the Ledger. \r\nYou can specify the type of account need to be created, Personal/Business.\r\n            \r\n<br><b>Request Attribute details:</b><br>1. AcctTp: Type of account - Personal, Business<br /><br><b>Response Attribute details:</b><br>1. AcctId: Unique identifier of account<br>2. AcctTp: Personal/Business<br>3. AcctHierarchy: Account Hierarchy - Parent when this operation is called<br>4. AcctSts: Status of the created account - Open<br /><br />\r\nNotes: NA\r\n            \r\n<br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/open```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpenRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpenRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpenRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOpenResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openSubAccount": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "Open Sub Account.",
+        "description": "This end point is used to create a new child Account on the Ledger. \r\nWe can specify the type of account need to created, Personal/Business.\r\n            \r\n<br><b>Request Attribute details:</b><br>1. AcctTp: Type of account - Personal, Business<br>2. PrntAcctId: Account ID of the Parent<br /><br><b>Response Attribute details:</b><br>1. AcctId: Unique identifier of account<br>2. AcctTp: Personal/Business<br>3. AcctHierarchy: Account Hierarchy - Child when this operation is called<br>4. AcctSts: Status of the created account - Open<br /><br /><b>Notes: </b><br /><br>1. We recommend that you store the relationship between Parent and Child on the PIP, as the Ledger will not be able to provide upward relationship<br /><br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/accounts/open```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpenSubRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpenSubRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpenSubRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOpenResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectAccount": {
+      "post": {
+        "tags": ["Esip"],
+        "summary": "ESIP - Ecosystem Service Interface Providers",
+        "description": "This end point connect account to an esip.\r\n\r\n<b>Request Attribute details:</b><br>1.AcctId: The Account ID of the user for whom the Alias is being created<br>2.AliasHash: SHA256 Hash of the Alias<br>3.EsipId -Id of the ESIP for which connection is created<br>4.Reference<br /><b>Response Attribute details:</b><br>1.TxId: Transaction ID from the Ledger<br /><b>Notes:</b>\r\nYou can only create Alias with different hash for a single customer\r\nThis request will FAIL, if the same hash has already been created in the Ledger by the same PIP(400)\r\n<br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/esips/connectAccount```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EsipConnectAccountDtoRequst"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EsipConnectAccountDtoRequst"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EsipConnectAccountDtoRequst"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EsipConnectAccountDtoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EsipConnectAccountDtoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EsipConnectAccountDtoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/disconnectAccount": {
+      "post": {
+        "tags": ["Esip"],
+        "description": "This end point disconnect  account to an esip.\r\n\r\n<b>Request Attribute details:</b><br>1.AliasHash: SHA256 Hash of the Alias<br /><b>Response Attribute details:</b><br>1.TxId: Transaction ID from the Ledger<br /><b>Notes:</b>\r\nNA\r\n<br />\r\nRequest URL: ```https://domain.for.later/BOI/rest/v1/esips/disconnectAccount```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EsipDisconnectAccountDtoRequst"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EsipDisconnectAccountDtoRequst"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EsipDisconnectAccountDtoRequst"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EsipDisconnectAccountDtoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EsipDisconnectAccountDtoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EsipDisconnectAccountDtoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pay": {
+      "post": {
+        "tags": ["Payment"],
+        "description": "This endpoint will be used to submit funds transfer request from one account to another.\r\n            \r\n<br><b>Request Attribute details:</b><br>1.FrmAcctId: Account from which fund needs to be taken<br>2.ToAcctId: Beneficiary Account to which funds to be transferred. Alternateively, to move it out of the CBDC system, pass 'DEFUND'<br>3.ToPipId: Beneficiary PIP information. If you are moving value outside the CBDC system, the ToPipId will be your own PIP ID.<br>4.Amount: Amount<br>5.NcrptdMsg: Encrypted ISO20022 message blob<br>6.NcrptdList: Encrypted ISO20022 message blob<br>6a.ToPipId : PIP owning the blob<br>6b.InitlstnVctr : The initialisation vector in base64 encoding<br>6c.Ncrptd : Base 64 encoded string of the encrypted data<br /><br><b>Response Attribute details:</b><br>1. TxId: Id of the transaction from the Ledger<br>2. Amount: Amount locked from the account<br /><br /><b>Notes: </b><br>1. To 'Defund' a CBDC account (in cases where its moved to a Fiat account), pass the 'ToAcctId' with the value 'DEFUND'. The ledger then moves this out of that account.<br>2. For the purpose of this CBDC system, the minimum value we expect is 0.0000 (with 4 decimals), and we have not set any upper limits. We expect the PIP to handle any rounding before sending it to the Ledger..<br /><br />\r\nRequest URL:<br />```https://domain.for.later/BOI/rest/v1/payments/pay```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentPayRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentPayRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentPayRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fund": {
+      "post": {
+        "tags": ["Payment"],
+        "description": "This endpoint is used to add CBDC to the account..\r\n            \r\n<br><b>Request Attribute details:</b><br>1.ToAcctId: Account to be funded'<br>2.ToPipId: PIP information in the header.<br>3.Amount: Amount<br>4.NcrptdMsg: Encrypted ISO20022 message blob<br>5.NcrptdList: Encrypted ISO20022 message blob<br>5a.ToPipId : PIP owning the blob<br>5b.InitlstnVctr : The initialisation vector in base64 encoding<br>5c.Ncrptd : Base 64 encoded string of the encrypted data<br /><br><b>Response Attribute details:</b><br>1. TxId: Id of the transaction from the Ledger<br>2. Amount: Amount locked from the account<br /><br /><b>Notes: </b><br>For the purpose of this CBDC system, the minimum value we expect is 0.0001 (with 4 decimals), and we have not set any upper limits. We expect the PIP to handle any rounding before sending it to the Ledger.        ///\r\n<br /><br />\r\nRequest URL:<br />```https://domain.for.later/BOI/rest/v1/payments/fund```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentFundRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentFundRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentFundRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/defund": {
+      "post": {
+        "tags": ["Payment"],
+        "description": "This endpoint is used to remove funds from the account.\r\n            \r\n<br><b>Request Attribute details:</b><br>1.AcctId: Account Id <br>3.Amount: Amount to be removed<br>4.NcrptdMsg: Encrypted ISO20022 message blob<br>5.NcrptdList: Encrypted ISO20022 message blob<br>5a.ToPipId : PIP owning the blob<br>5b.InitlstnVctr : The initialisation vector in base64 encoding<br>5c.Ncrptd : Base 64 encoded string of the encrypted data<br /><br><b>Response Attribute details:</b><br>1. TxId: Id of the transaction from the Ledger<br>2. Amount: Amount locked from the account<br /><br /><b>Notes: </b><br>1. API will validate the existence of an account and throw error if not found.<br>2. For the purpose of this CBDC system, the minimum value we expect is 0.0001 (with 4 decimals), and we have not set any upper limits. We expect the PIP to handle any rounding before sending it to the Ledger.        ///\r\n<br /><br />\r\nRequest URL:<br />```https://domain.for.later/BOI/rest/v1/payments/defund```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentDefundRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentDefundRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentDefundRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/splitPay": {
+      "post": {
+        "tags": ["Payment"],
+        "description": "This endpoint is used to remove funds from the account.\r\n            \r\n<br><b>Request Attribute details:</b><br>1.AcctId: Account Id <br>3.Amount: Amount to be removed<br>4.NcrptdMsg: Encrypted ISO20022 message blob<br>5.NcrptdList: Encrypted ISO20022 message blob<br>5a.ToPipId : PIP owning the blob<br>5b.InitlstnVctr : The initialisation vector in base64 encoding<br>5c.Ncrptd : Base 64 encoded string of the encrypted data<br /><br><b>Response Attribute details:</b><br>1. TxId: Id of the transaction from the Ledger<br>2. Amount: Amount locked from the account<br /><br /><b>Notes: </b><br>1. API will validate the existence of an account and throw error if not found.<br>2. For the purpose of this CBDC system, the minimum value we expect is 0.0001 (with 4 decimals), and we have not set any upper limits. We expect the PIP to handle any rounding before sending it to the Ledger.        ///\r\n<br /><br />\r\nRequest URL:<br />```https://domain.for.later/BOI/rest/v1/payments/defund```",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentSplitPayRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentSplitPayRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentSplitPayRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentPayResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/requestToPay": {
+      "post": {
+        "tags": ["Payment"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequestToPayRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequestToPayRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequestToPayRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {}
+              },
+              "application/json": {
+                "schema": {}
+              },
+              "text/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountActionResponseDto": {
+        "type": "object",
+        "properties": {
+          "acctId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "acctSts": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorRes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountAliasRequestDto": {
+        "type": "object",
+        "properties": {
+          "acctId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "aliasType": {
+            "type": "string",
+            "nullable": true
+          },
+          "aliasHash": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountAliasResponseDto": {
+        "type": "object",
+        "properties": {
+          "sts": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorRes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountGetAvailableBalancesDto": {
+        "type": "object",
+        "properties": {
+          "ttBal": {
+            "type": "number",
+            "format": "double"
+          },
+          "avblBal": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorRes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountIdWrapper": {
+        "type": "object",
+        "properties": {
+          "acctId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountOpenRequestDto": {
+        "type": "object",
+        "properties": {
+          "acctTp": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountOpenResponseDto": {
+        "type": "object",
+        "properties": {
+          "acctCretRspn": {
+            "$ref": "#/components/schemas/AcctCreatRspn"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorRes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountOpenSubRequestDto": {
+        "type": "object",
+        "properties": {
+          "acctTp": {
+            "$ref": "#/components/schemas/AccountType"
+          },
+          "prntAcctId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountStatus": {
+        "enum": ["OPEN", "CLOSED", "DISABLE", "FROZEN"],
+        "type": "string"
+      },
+      "AccountType": {
+        "enum": ["PERSONAL", "BUSNIESS"],
+        "type": "string"
+      },
+      "AcctCreatRspn": {
+        "type": "object",
+        "properties": {
+          "acctId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "acctTp": {
+            "$ref": "#/components/schemas/AccountType"
+          },
+          "acctSts": {
+            "$ref": "#/components/schemas/AccountStatus"
+          },
+          "acctHierarchy": {
+            "$ref": "#/components/schemas/AcctHierarchy"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AcctHierarchy": {
+        "enum": ["PARENT", "CHILD"],
+        "type": "string"
+      },
+      "ErrorRes": {
+        "type": "object",
+        "properties": {
+          "cd": {
+            "type": "string",
+            "nullable": true
+          },
+          "errMsg": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EsipConnectAccountDtoRequst": {
+        "type": "object",
+        "properties": {
+          "acctId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "aliasHash": {
+            "type": "string",
+            "nullable": true
+          },
+          "esipId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ref": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EsipConnectAccountDtoResponse": {
+        "type": "object",
+        "properties": {
+          "txId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorRes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EsipDisconnectAccountDtoRequst": {
+        "type": "object",
+        "properties": {
+          "aliasHash": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EsipDisconnectAccountDtoResponse": {
+        "type": "object",
+        "properties": {
+          "txId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentDefundRequestDto": {
+        "type": "object",
+        "properties": {
+          "ncrptdMsg": {
+            "type": "string",
+            "nullable": true
+          },
+          "ncrptdList": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "minimum": 0.0001,
+            "type": "number",
+            "format": "double"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentFundRequestDto": {
+        "type": "object",
+        "properties": {
+          "ncrptdMsg": {
+            "type": "string",
+            "nullable": true
+          },
+          "ncrptdList": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "minimum": 0.0001,
+            "type": "number",
+            "format": "double"
+          },
+          "toAcctId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentPayRequestDto": {
+        "type": "object",
+        "properties": {
+          "ncrptdMsg": {
+            "type": "string",
+            "nullable": true
+          },
+          "ncrptdList": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "minimum": 0.0001,
+            "type": "number",
+            "format": "double"
+          },
+          "toPspId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "toAcctId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "frmAcctId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentPayResponseDto": {
+        "type": "object",
+        "properties": {
+          "txId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "acctId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "toPipId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorRes"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentRequestToPayRequestDto": {
+        "type": "object",
+        "properties": {
+          "ncrptdMsg": {
+            "type": "string",
+            "nullable": true
+          },
+          "ncrptdList": {
+            "type": "string",
+            "nullable": true
+          },
+          "toPipId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "endToEndId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tp": {
+            "$ref": "#/components/schemas/PaymentType"
+          },
+          "authentication": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentSplitPay": {
+        "type": "object",
+        "properties": {
+          "ncrptdMsg": {
+            "type": "string",
+            "nullable": true
+          },
+          "ncrptdList": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "minimum": 0.0001,
+            "type": "number",
+            "format": "double"
+          },
+          "toPspId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "toAcctId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentSplitPayRequestDto": {
+        "type": "object",
+        "properties": {
+          "frmAcctId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pmtDtls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentSplitPay"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentType": {
+        "enum": ["RTP", "RTP_DECLINE", "ERECEIPT", "RTL", "RTL_DECLINE"],
+        "type": "string"
+      }
+    }
+  }
+}

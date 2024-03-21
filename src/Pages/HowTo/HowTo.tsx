@@ -1,7 +1,6 @@
-import React from "react";
 import PageCard from "../../Components/PageCard/PageCard";
 import CollapseUi from "../../Components/CollapseUI/CollapseUi";
-import { CollapseProps, Descriptions, Flex, Row, Typography } from "antd";
+import { CollapseProps, Descriptions } from "antd";
 import { responsiveBreakPoints } from "../../Utils/Constants";
 
 const items: CollapseProps["items"] = [
